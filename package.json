@@ -3,22 +3,36 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "mkdir -p src/__generated__ && concurrently \"relay-compiler --watch\" \"next dev\" \"node src/graphql/server/index.mjs\"",
+    "build": "relay-compiler --validate && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prettier": "prettier --write .",
+    "relay": "relay-compiler",
+    "relay-config-gen": "npx json2ts ./node_modules/relay-compiler/relay-compiler-config-schema.json -o ./src/relay/relay-config.d.ts",
+    "print-schema": "node ./src/graphql/server/printSchema.mjs > ./src/graphql/server/schema.graphql",
+    "dev-graphql-server": "node src/graphql/server/index.mjs"
   },
   "dependencies": {
+    "graphql": "^17.0.0-alpha.7",
+    "next": "14.2.16",
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.2.16"
+    "react-relay": "^18.1.0",
+    "relay-runtime": "^18.1.0"
   },
   "devDependencies": {
-    "typescript": "^5",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/react-relay": "^16.0.6",
+    "@types/relay-runtime": "^18.1.0",
+    "concurrently": "^9.0.1",
     "eslint": "^8",
-    "eslint-config-next": "14.2.16"
+    "eslint-config-next": "14.2.16",
+    "eslint-plugin-relay": "^1.8.3",
+    "json-schema-to-typescript": "^15.0.2",
+    "relay-compiler": "^18.1.0",
+    "typescript": "^5"
   }
 }
