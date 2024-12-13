@@ -10,7 +10,6 @@ import {
   CacheConfig,
 } from "relay-runtime";
 
-const ENDPOINT = "http://localhost:3000/api/graphql";
 const IS_SERVER = typeof window === typeof undefined;
 const CACHE_TTL = 5 * 1000; // 5 seconds, to resolve preloaded results
 
@@ -19,17 +18,22 @@ export async function networkFetch(
   variables: Variables
 ): Promise<GraphQLResponse> {
   console.log({ query: request.text, variables });
-  const resp = await fetch(IS_SERVER ? ENDPOINT : "/api/graphql", {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      query: request.text,
-      variables,
-    }),
-  });
+  const resp = await fetch(
+    IS_SERVER
+      ? "http://localhost:3000/api/proxy/graphql"
+      : "/api/proxy/graphql",
+    {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: request.text,
+        variables,
+      }),
+    }
+  );
   const json = await resp.json();
 
   // GraphQL returns exceptions (for example, a missing required variable) in the "errors"

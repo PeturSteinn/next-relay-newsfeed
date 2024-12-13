@@ -1,8 +1,9 @@
 /** @type {import('next').NextConfig} */
+
 const nextConfig = {
   rewrites: async () => [
     {
-      source: "/api/graphql",
+      source: "/api/proxy/:path",
       destination: "http://localhost:8080",
     },
   ],

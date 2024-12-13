@@ -73,6 +73,10 @@ function sleep(s) {
 const PORT = 8080;
 const server = http.createServer(async (req, res) => {
   console.log("request received: " + req.url);
+  console.log("headers received: ");
+  Object.entries(req.headers).forEach(([key, val]) => {
+    console.log(key, val);
+  });
   res.writeHead(200, { "Content-Type": "application/json" });
 
   let response = { data: null };
@@ -82,7 +86,7 @@ const server = http.createServer(async (req, res) => {
       buffers.push(chunk);
     }
     const requestParams = JSON.parse(Buffer.concat(buffers).toString());
-    console.log("requestParams: " + JSON.stringify(requestParams, null, 2));
+    // console.log("requestParams: " + JSON.stringify(requestParams, null, 2));
 
     response = await graphql({
       schema,
